@@ -3,10 +3,12 @@ import { profile } from './content/profile'
 import profilePhoto from './assets/mohammadi profile.jpeg'
 import HeroScene from './components/HeroScene'
 import {
+  ArrowUpRight,
   BadgeCheck,
   BriefcaseBusiness,
   Building2,
   CircleUser,
+  Copy,
   GraduationCap,
   LaptopMinimal,
   Link as LinkIcon,
@@ -32,6 +34,8 @@ function App() {
   useEffect(() => {
     const root = document.documentElement
     root.classList.toggle('dark', theme === 'dark')
+    document.body.classList.toggle('dark', theme === 'dark')
+    root.setAttribute('data-theme', theme)
     window.localStorage.setItem('theme', theme)
   }, [theme])
 
@@ -368,17 +372,27 @@ function App() {
               title="Email"
               value={profile.email}
               href={`mailto:${profile.email}`}
+              icon="mail"
+              copyValue={profile.email}
             />
             <ContactCard
               title="LinkedIn"
               value="mohammad-haroon-m-0533b6240"
               href={profile.linkedin}
+              icon="link"
             />
-            <ContactCard title="Phone" value={profile.phone} href={`tel:${profile.phone}`} />
+            <ContactCard
+              title="Phone"
+              value={profile.phone}
+              href={`tel:${profile.phone}`}
+              icon="phone"
+              copyValue={profile.phone}
+            />
             <ContactCard
               title="APS"
               value="aps.gov.af"
               href={profile.companySite}
+              icon="org"
             />
           </div>
         </Section>
@@ -571,17 +585,25 @@ function ExperienceCard(props: { experience: import('./content/profile').Experie
   )
 }
 
-function ContactCard(props: { title: string; value: string; href: string }) {
+function ContactCard(props: {
+  title: string
+  value: string
+  href: string
+  icon: 'mail' | 'phone' | 'link' | 'org'
+  copyValue?: string
+}) {
   const icon =
-    props.title === 'Email' ? (
+    props.icon === 'mail' ? (
       <Mail className="size-4" aria-hidden="true" />
-    ) : props.title === 'LinkedIn' ? (
-      <LinkIcon className="size-4" aria-hidden="true" />
-    ) : props.title === 'Phone' ? (
+    ) : props.icon === 'phone' ? (
       <Phone className="size-4" aria-hidden="true" />
+    ) : props.icon === 'link' ? (
+      <LinkIcon className="size-4" aria-hidden="true" />
     ) : (
       <Building2 className="size-4" aria-hidden="true" />
     )
+
+  const canCopy = Boolean(props.copyValue)
 
   return (
     <Reveal>
@@ -589,16 +611,47 @@ function ContactCard(props: { title: string; value: string; href: string }) {
         href={props.href}
         target={props.href.startsWith('http') ? '_blank' : undefined}
         rel={props.href.startsWith('http') ? 'noreferrer' : undefined}
-        className="glass glass-hover group rounded-3xl p-6"
+        className="glass group relative overflow-hidden rounded-3xl p-6 transition will-change-transform hover:-translate-y-0.5 hover:shadow-lg"
       >
-        <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
-          <span className="inline-flex items-center gap-2">
-            <span className="text-slate-500 dark:text-slate-400">{icon}</span>
-            {props.title}
-          </span>
+        <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
+          <div className="absolute -left-24 -top-24 size-72 rounded-full bg-indigo-500/10 blur-2xl dark:bg-indigo-400/10" />
+          <div className="absolute -bottom-24 -right-24 size-72 rounded-full bg-fuchsia-500/10 blur-2xl dark:bg-fuchsia-400/10" />
         </div>
-        <div className="mt-2 text-sm font-semibold text-slate-900 group-hover:underline dark:text-white">
-          {props.value}
+
+        <div className="relative flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <span className="grid size-8 place-items-center rounded-2xl border border-slate-200 bg-white text-indigo-600 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-indigo-300">
+                {icon}
+              </span>
+              {props.title}
+            </div>
+
+            <div className="mt-3 truncate text-base font-semibold text-slate-900 dark:text-white">
+              {props.value}
+            </div>
+            <div className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+              Click to open
+            </div>
+          </div>
+
+          <div className="flex shrink-0 flex-col items-end gap-2">
+            <ArrowUpRight className="size-5 text-slate-400 transition group-hover:text-slate-700 dark:text-slate-500 dark:group-hover:text-slate-200" />
+            {canCopy ? (
+              <button
+                type="button"
+                className="btn-secondary px-2.5 py-1.5 text-xs"
+                onClick={(e) => {
+                  e.preventDefault()
+                  void navigator.clipboard?.writeText(props.copyValue ?? '')
+                }}
+                aria-label={`Copy ${props.title}`}
+              >
+                <Copy className="mr-1.5 size-3.5" aria-hidden="true" />
+                Copy
+              </button>
+            ) : null}
+          </div>
         </div>
       </a>
     </Reveal>
