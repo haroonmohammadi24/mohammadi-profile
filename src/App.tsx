@@ -11,10 +11,12 @@ import {
   Copy,
   GraduationCap,
   LaptopMinimal,
+  Layers3,
   Link as LinkIcon,
   Mail,
   Moon,
   Phone,
+  ShieldCheck,
   Sun,
   Wrench,
 } from 'lucide-react'
@@ -256,36 +258,96 @@ function App() {
         <Section id="about" title="About" subtitle="A quick summary">
           <div className="grid gap-8 md:grid-cols-12">
             <div className="md:col-span-8">
-              <div className="space-y-4 text-slate-700 dark:text-slate-200">
-                {profile.summary.map((p) => (
-                  <p key={p} className="leading-relaxed">
-                    {p}
-                  </p>
-                ))}
-              </div>
-            </div>
-            <div className="md:col-span-4">
-              <div className="rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm dark:border-slate-800/60 dark:bg-slate-950/40">
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
-                  Top skills
-                </h3>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {profile.topSkills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="inline-flex items-center rounded-full bg-indigo-600/10 px-3 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-200"
-                    >
-                      {skill}
-                    </span>
+              <div className="glass rounded-3xl p-6">
+                <div className="space-y-4 text-slate-700 dark:text-slate-200">
+                  {profile.summary.map((p) => (
+                    <p key={p} className="leading-relaxed">
+                      {p}
+                    </p>
                   ))}
                 </div>
-                <div className="mt-6 text-sm text-slate-600 dark:text-slate-300">
-                  <div className="font-medium text-slate-900 dark:text-white">
-                    Standards
-                  </div>
-                  <div className="mt-1">ISO 8583 • ISO 20022</div>
-                </div>
               </div>
+
+              <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                <Reveal>
+                  <div className="glass glass-hover rounded-3xl p-5">
+                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
+                      <ShieldCheck
+                        className="size-4 text-indigo-600/80 dark:text-indigo-300/80"
+                        aria-hidden="true"
+                      />
+                      Secure by design
+                    </div>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                      Authentication, authorization, and reliability-first delivery.
+                    </p>
+                  </div>
+                </Reveal>
+                <Reveal>
+                  <div className="glass glass-hover rounded-3xl p-5">
+                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
+                      <Layers3
+                        className="size-4 text-indigo-600/80 dark:text-indigo-300/80"
+                        aria-hidden="true"
+                      />
+                      Architecture
+                    </div>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                      Microservices, integrations, and interoperable platforms.
+                    </p>
+                  </div>
+                </Reveal>
+                <Reveal>
+                  <div className="glass glass-hover rounded-3xl p-5">
+                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
+                      <BriefcaseBusiness
+                        className="size-4 text-indigo-600/80 dark:text-indigo-300/80"
+                        aria-hidden="true"
+                      />
+                      Leadership
+                    </div>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                      Project delivery, mentoring teams, and modernization programs.
+                    </p>
+                  </div>
+                </Reveal>
+              </div>
+            </div>
+
+            <div className="md:col-span-4">
+              <Reveal>
+                <div className="glass glass-hover rounded-3xl p-6">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                    Top skills
+                  </h3>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {profile.topSkills.map((skill) => (
+                      <span key={skill} className="chip-accent">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-6 text-sm text-slate-600 dark:text-slate-300">
+                    <div className="font-medium text-slate-900 dark:text-white">
+                      Standards
+                    </div>
+                    <div className="mt-1">ISO 8583 • ISO 20022</div>
+                  </div>
+
+                  <div className="mt-6 rounded-2xl bg-slate-50 p-4 dark:bg-slate-900/40">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                      Stack
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {['Spring Boot', 'Kotlin', 'React', 'Docker', 'Kafka'].map((t) => (
+                        <span key={t} className="chip">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
             </div>
           </div>
         </Section>
@@ -604,6 +666,7 @@ function ContactCard(props: {
     )
 
   const canCopy = Boolean(props.copyValue)
+  const [copied, setCopied] = useState(false)
 
   return (
     <Reveal>
@@ -611,47 +674,55 @@ function ContactCard(props: {
         href={props.href}
         target={props.href.startsWith('http') ? '_blank' : undefined}
         rel={props.href.startsWith('http') ? 'noreferrer' : undefined}
-        className="glass group relative overflow-hidden rounded-3xl p-6 transition will-change-transform hover:-translate-y-0.5 hover:shadow-lg"
+        className="glass glass-hover group relative rounded-3xl p-6"
       >
-        <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-          <div className="absolute -left-24 -top-24 size-72 rounded-full bg-indigo-500/10 blur-2xl dark:bg-indigo-400/10" />
-          <div className="absolute -bottom-24 -right-24 size-72 rounded-full bg-fuchsia-500/10 blur-2xl dark:bg-fuchsia-400/10" />
-        </div>
+        <div className="flex items-center gap-4">
+          <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500/15 via-fuchsia-500/10 to-emerald-500/10 text-indigo-700 dark:from-indigo-500/20 dark:via-fuchsia-500/10 dark:to-emerald-500/10 dark:text-indigo-200">
+            {icon}
+          </div>
 
-        <div className="relative flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              <span className="grid size-8 place-items-center rounded-2xl border border-slate-200 bg-white text-indigo-600 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-indigo-300">
-                {icon}
-              </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               {props.title}
             </div>
-
-            <div className="mt-3 truncate text-base font-semibold text-slate-900 dark:text-white">
+            <div className="mt-1 truncate text-sm font-semibold text-slate-900 dark:text-white sm:text-base">
               {props.value}
-            </div>
-            <div className="mt-1 text-xs text-slate-600 dark:text-slate-300">
-              Click to open
             </div>
           </div>
 
-          <div className="flex shrink-0 flex-col items-end gap-2">
-            <ArrowUpRight className="size-5 text-slate-400 transition group-hover:text-slate-700 dark:text-slate-500 dark:group-hover:text-slate-200" />
+          <div className="flex shrink-0 items-center gap-2">
             {canCopy ? (
               <button
                 type="button"
-                className="btn-secondary px-2.5 py-1.5 text-xs"
+                className="btn-secondary px-2.5 py-2 text-xs"
                 onClick={(e) => {
                   e.preventDefault()
                   void navigator.clipboard?.writeText(props.copyValue ?? '')
+                  setCopied(true)
+                  window.setTimeout(() => setCopied(false), 1100)
                 }}
                 aria-label={`Copy ${props.title}`}
               >
-                <Copy className="mr-1.5 size-3.5" aria-hidden="true" />
-                Copy
+                <Copy className="size-4" aria-hidden="true" />
               </button>
             ) : null}
+            <span className="btn-secondary px-2.5 py-2 text-xs">
+              <ArrowUpRight className="size-4" aria-hidden="true" />
+            </span>
           </div>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-200/70 pt-4 text-xs text-slate-600 dark:border-slate-800/60 dark:text-slate-300">
+          <span className="truncate">
+            {props.href.startsWith('http') ? 'Opens in new tab' : 'Opens in app'}
+          </span>
+          {canCopy ? (
+            <span className="chip-accent px-2 py-0.5">
+              {copied ? 'Copied' : 'Copy'}
+            </span>
+          ) : (
+            <span className="chip px-2 py-0.5">Link</span>
+          )}
         </div>
       </a>
     </Reveal>
